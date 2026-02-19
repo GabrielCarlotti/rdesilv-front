@@ -43,7 +43,7 @@ export function ApiParamsForm({ params, onChange, apiUrl, onApiUrlChange, disabl
       </label>
 
       {/* Params row */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <label className="flex flex-col gap-1">
           <span style={{ color: 'rgb(var(--text-muted))' }} className="text-xs font-medium">
             SMIC mensuel (€)
@@ -113,6 +113,27 @@ export function ApiParamsForm({ params, onChange, apiUrl, onApiUrlChange, disabl
             className="flex h-8 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors"
           >
             {params.include_frappe_check ? 'Activé' : 'Désactivé'}
+          </button>
+        </label>
+
+        <label className="flex flex-col gap-1">
+          <span style={{ color: 'rgb(var(--text-muted))' }} className="text-xs font-medium">
+            Analyse convention (IA)
+          </span>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => set('include_analyse_llm', !params.include_analyse_llm)}
+            style={{
+              backgroundColor: params.include_analyse_llm
+                ? 'rgb(var(--accent))'
+                : 'rgb(var(--bg-subtle))',
+              border: '1px solid rgb(var(--border))',
+              color: params.include_analyse_llm ? '#fff' : 'rgb(var(--text))',
+            }}
+            className="flex h-8 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors"
+          >
+            {params.include_analyse_llm ? 'Activé' : 'Désactivé'}
           </button>
         </label>
       </div>

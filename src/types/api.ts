@@ -24,4 +24,5 @@ export interface ApiParams {
   effectif_50_et_plus: boolean;
   plafond_ss: number;
   include_frappe_check: boolean;
+  include_analyse_llm: boolean;
 }

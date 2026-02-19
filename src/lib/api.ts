@@ -11,6 +11,7 @@ export async function checkPayslip(
   form.append('effectif_50_et_plus', String(params.effectif_50_et_plus));
   form.append('plafond_ss', String(params.plafond_ss));
   form.append('include_frappe_check', String(params.include_frappe_check));
+  form.append('include_analyse_llm', String(params.include_analyse_llm));
 
   console.group('[CEGI] POST', apiUrl);
   console.log('file:', file.name, file.size, 'bytes');
