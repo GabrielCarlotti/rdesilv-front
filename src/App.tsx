@@ -11,6 +11,7 @@ import { LicenciementPanel } from './components/licenciement/LicenciementPanel';
 import { checkPayslip } from './lib/api';
 import { exportReport } from './lib/exportPdf';
 import type { ApiParams, CheckReport } from './types/api';
+import { API_BASE } from './config';
 
 type Tab = 'analyse' | 'licenciement';
 
@@ -22,7 +23,7 @@ const DEFAULT_PARAMS: ApiParams = {
   include_analyse_llm: false,
 };
 
-const DEFAULT_API_URL = 'http://localhost:8000/api/check';
+const DEFAULT_API_URL = `${API_BASE}/check`;
 
 export default function App() {
   const { theme, toggle } = useTheme();

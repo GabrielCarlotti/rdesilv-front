@@ -9,6 +9,7 @@ import { Modal } from '../Modal';
 import { calculerLicenciement, extracterDepuisPdf } from '../../lib/licenciement';
 import { exportLicenciementPdf } from '../../lib/exportLicenciement';
 import type { LicenciementInput, LicenciementResult } from '../../types/licenciement';
+import { API_BASE } from '../../config';
 
 const today = new Date().toISOString().slice(0, 10);
 
@@ -29,8 +30,8 @@ const DEFAULT_INPUT: LicenciementInput = {
   salaire_mensuel_actuel: null,
 };
 
-const DEFAULT_API_URL = 'http://localhost:8000/api/licenciement';
-const DEFAULT_PDF_API_URL = 'http://localhost:8000/api/licenciementpdf';
+const DEFAULT_API_URL = `${API_BASE}/licenciement`;
+const DEFAULT_PDF_API_URL = `${API_BASE}/licenciementpdf`;
 
 interface ExtractionBanner {
   fichesCount: number;

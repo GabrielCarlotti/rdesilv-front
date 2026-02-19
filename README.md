@@ -1,73 +1,115 @@
-# React + TypeScript + Vite
+# CEGI — Vérificateur de fiches de paie
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web pour l'analyse automatique de fiches de paie et le calcul d'indemnités de licenciement.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Lancement rapide (Docker)
 
-## React Compiler
+### Prérequis
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [Docker](https://docs.docker.com/get-docker/) et Docker Compose installés
+- Une clé API Gemini (Google AI Studio)
 
-## Expanding the ESLint configuration
+### 1. Cloner les deux dépôts côte à côte
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <url-repo-front> rdesilv-front
+git clone <url-repo-back>  rdesilv
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+La structure doit être :
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+esilv/
+├── rdesilv-front/   ← ce repo (frontend)
+└── rdesilv/         ← repo backend
+```
+
+### 2. Configurer le backend
+
+Copier le `Dockerfile.backend` fourni dans ce repo vers le repo backend :
+
+```bash
+cp rdesilv-front/Dockerfile.backend rdesilv/Dockerfile
+```
+
+Créer le fichier `.env` dans le repo backend :
+
+```bash
+# rdesilv/.env
+GEMINI_API_KEY=votre_clé_api_gemini
+```
+
+### 3. Lancer l'application
+
+Depuis le dossier **`rdesilv-front`** :
+
+```bash
+docker compose up --build
+```
+
+- Frontend : http://localhost:3000
+- Backend  : http://localhost:8000
+- Docs API : http://localhost:8000/docs
+
+Pour arrêter :
+
+```bash
+docker compose down
+```
+
+---
+
+## Développement local (sans Docker)
+
+### Backend
+
+```bash
+cd rdesilv
+cp .env.example .env   # puis renseigner GEMINI_API_KEY
+uv sync
+uv run prod
+```
+
+### Frontend
+
+```bash
+cd rdesilv-front
+cp .env.example .env   # VITE_API_BASE_URL=http://localhost:8000/api
+npm install
+npm run dev
+```
+
+---
+
+## Variables d'environnement
+
+### Frontend (`rdesilv-front/.env`)
+
+| Variable | Défaut | Description |
+|---|---|---|
+| `VITE_API_BASE_URL` | `http://localhost:8000/api` | URL de base de l'API backend |
+
+### Backend (`rdesilv/.env`)
+
+| Variable | Requis | Description |
+|---|---|---|
+| `GEMINI_API_KEY` | Oui | Clé API Google Gemini (analyses IA) |
+
+---
+
+## Fonctionnalités
+
+**Onglet Analyse fiche de paie**
+- Upload d'une fiche de paie PDF
+- Vérification automatique des cotisations (bases, CSG, RGDU, etc.)
+- Surlignage des lignes en erreur dans l'aperçu PDF
+- Rapport d'erreurs groupé par type de vérification
+- Export PDF du rapport
+
+**Onglet Calcul licenciement**
+- Pré-remplissage depuis les 12 dernières fiches de paie (PDF)
+- Calcul de l'indemnité légale (licenciement et rupture conventionnelle)
+- Support CCN 1966
+- Export PDF du résultat
